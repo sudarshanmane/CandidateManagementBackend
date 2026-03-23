@@ -6,22 +6,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = exports.generateToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const envConfig_1 = require("../../config/envConfig");
-const generateToken = ({ userId, tenantId, role }) => {
-    return jsonwebtoken_1.default.sign({ userId, tenantId, role }, envConfig_1.JWT_SCERET, { expiresIn: "1d" });
+const errors_1 = require("../error/errors");
+const generateToken = ({ userId, tenantId, role, orgDomain, }) => {
+    return jsonwebtoken_1.default.sign({ userId, tenantId, role, orgDomain }, envConfig_1.JWT_SCERET, {
+        expiresIn: "1d",
+    });
 };
 exports.generateToken = generateToken;
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
+        throw new errors_1.AppError("Unauthorized", 401);
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        const decoded = jsonwebtoken_1.default.verify(token, envConfig_1.JWT_SCERET);
         req.user = decoded;
         next();
     }
     catch (error) {
-        return res.status(401).json({ message: "Invalid token" });
+        throw new errors_1.AppError("Invalid token", 401);
     }
 };
 exports.authMiddleware = authMiddleware;

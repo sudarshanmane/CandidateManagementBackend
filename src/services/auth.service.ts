@@ -43,6 +43,7 @@ export const AuthService = {
       userId: user?._id.toString(),
       tenantId: user.tenantId.toString(),
       role: user.role,
+      orgDomain: user.email.split("@")[1],
     });
 
     return { token };

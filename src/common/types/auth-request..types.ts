@@ -5,6 +5,7 @@ export interface AuthRequest extends Request {
     userId: string;
     tenantId: string;
     role: string;
+    orgDomain: string;
   };
   tenantId?: string;
 }

@@ -57,6 +57,5 @@ const UserSchema = new mongoose_1.Schema({
     },
     isActive: { type: Boolean, default: true },
 }, { timestamps: true });
-UserSchema.index({ email: 1 });
 UserSchema.index({ tenantId: 1 });
 exports.User = mongoose_1.default.model("User", UserSchema);

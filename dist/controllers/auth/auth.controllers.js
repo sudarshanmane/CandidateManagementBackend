@@ -10,6 +10,6 @@ exports.login = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     (0, response_1.sendResponse)(res, {
         statusCode: 200,
         message: "success",
-        data: { token },
+        data: token,
     });
 });

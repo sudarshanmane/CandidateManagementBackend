@@ -12,5 +12,5 @@ userRouter.get("/me", auth_middleware_1.authMiddleware, user_cotrollers_1.getMe)
 userRouter.get("/", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), user_cotrollers_1.getUsers);
 userRouter.post("/", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), (0, validate_middleware_1.validate)(user_validation_1.createUserSchema), user_cotrollers_1.createUser);
 userRouter.put("/:userId", auth_middleware_1.authMiddleware, (0, validate_middleware_1.validate)(user_validation_1.updateUserSchema), user_cotrollers_1.updateUser);
-userRouter.put("/userId", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), user_cotrollers_1.deactivateUser);
+userRouter.put("/deactivate/:userId", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), user_cotrollers_1.deactivateUser);
 exports.default = userRouter;

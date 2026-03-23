@@ -13,7 +13,6 @@ const errors_1 = require("../common/error/errors");
 exports.AuthService = {
     register: async (data) => {
         const existingUser = await UserRepository_repo_1.userRepository.findByEmail(data.email);
-        console.log("existingUser-=", existingUser);
         if (existingUser) {
             throw new errors_1.AppError("User already exists", 400);
         }
@@ -37,6 +36,7 @@ exports.AuthService = {
             userId: user?._id.toString(),
             tenantId: user.tenantId.toString(),
             role: user.role,
+            orgDomain: user.email.split("@")[1],
         });
         return { token };
     },

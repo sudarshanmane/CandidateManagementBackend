@@ -1,20 +1,29 @@
-import { UserRole } from "../../modules/users/user.model";
+import { User, UserRole } from "../../modules/users/user.model";
 import jwt from "jsonwebtoken";
 import { JWT_SCERET } from "../../config/envConfig";
 import { NextFunction, Response } from "express";
 import { AuthRequest } from "../types/auth-request..types";
+import { AppError } from "../error/errors";
 
 type TokenPayload = {
   userId: string;
   tenantId: string;
   role: UserRole;
+  orgDomain: string;
 };
 
-export const generateToken = ({ userId, tenantId, role }: TokenPayload) => {
-  return jwt.sign({ userId, tenantId, role }, JWT_SCERET, { expiresIn: "1d" });
+export const generateToken = ({
+  userId,
+  tenantId,
+  role,
+  orgDomain,
+}: TokenPayload) => {
+  return jwt.sign({ userId, tenantId, role, orgDomain }, JWT_SCERET, {
+    expiresIn: "1d",
+  });
 };
 
-export const authMiddleware = (
+export const authMiddleware = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction,
@@ -22,20 +31,26 @@ export const authMiddleware = (
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    throw new AppError("Unauthorized", 401);
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SCERET) as {
       userId: string;
       tenantId: string;
-      role: string;
+      role: UserRole;
+      orgDomain: string;
     };
+
+    let user = await User.findOne({ _id: decoded.userId, isActive: true });
+    if (!user) {
+      throw new AppError("Invalid Credentials!", 401);
+    }
 
     req.user = decoded;
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    throw new AppError("Invalid token", 401);
   }
 };
