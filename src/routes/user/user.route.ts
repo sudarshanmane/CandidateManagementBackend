@@ -37,7 +37,7 @@ userRouter.put(
 );
 
 userRouter.put(
-  "/userId",
+  "/deactivate/:userId",
   authMiddleware,
   authorize(UserRole.ADMIN),
   deactivateUser,

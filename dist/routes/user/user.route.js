@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_middleware_1 = require("../../common/middlewares/auth.middleware");
+const rbac_middleware_1 = require("../../common/middlewares/rbac.middleware");
+const user_model_1 = require("../../modules/users/user.model");
+const user_cotrollers_1 = require("../../controllers/user/user.cotrollers");
+const user_validation_1 = require("../../validation/user.validation");
+const validate_middleware_1 = require("../../common/middlewares/validate.middleware");
+const userRouter = (0, express_1.Router)();
+userRouter.get("/me", auth_middleware_1.authMiddleware, user_cotrollers_1.getMe);
+userRouter.get("/", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), user_cotrollers_1.getUsers);
+userRouter.post("/", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), (0, validate_middleware_1.validate)(user_validation_1.createUserSchema), user_cotrollers_1.createUser);
+userRouter.put("/:userId", auth_middleware_1.authMiddleware, (0, validate_middleware_1.validate)(user_validation_1.updateUserSchema), user_cotrollers_1.updateUser);
+userRouter.put("/userId", auth_middleware_1.authMiddleware, (0, rbac_middleware_1.authorize)(user_model_1.UserRole.ADMIN), user_cotrollers_1.deactivateUser);
+exports.default = userRouter;

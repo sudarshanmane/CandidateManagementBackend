@@ -8,7 +8,7 @@ class UserRepository extends BaseRepository<IUser> {
   }
 
   async findByEmail(email: string) {
-    return User.find({
+    return User.findOne({
       email,
     }).lean<IUser>();
   }

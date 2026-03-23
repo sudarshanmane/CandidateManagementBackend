@@ -27,7 +27,7 @@ export const AuthService = {
     email: string,
     password: string,
   ): Promise<{ token: string }> => {
-    const user = await User.find({ email, isActive: true }).lean<IUser>();
+    const user = await User.findOne({ email, isActive: true }).lean<IUser>();
 
     if (!user) {
       throw new AppError("Invalid credentials!", 400);
