@@ -10,7 +10,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
-app.use(cors());
+// app.use(cors("*"));
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "OK" });

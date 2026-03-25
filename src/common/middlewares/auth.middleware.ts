@@ -19,7 +19,7 @@ export const generateToken = ({
   orgDomain,
 }: TokenPayload) => {
   return jwt.sign({ userId, tenantId, role, orgDomain }, JWT_SCERET, {
-    expiresIn: "1d",
+    expiresIn: "1000",
   });
 };
 
