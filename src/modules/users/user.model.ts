@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import "../org/org.model";
 
 export enum UserRole {
   ADMIN = "ADMIN",

@@ -26,6 +26,7 @@ export const getUsers = asyncHandler(
 
 export const createUser = asyncHandler(
   async (req: AuthRequest, res: Response) => {
+
     const data = await userService.createUser(req.body, req.user!.tenantId);
 
     sendResponse(res, {

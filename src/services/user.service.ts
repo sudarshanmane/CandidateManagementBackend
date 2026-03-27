@@ -7,10 +7,12 @@ import {
 } from "../validation/user.validation";
 import { hashPassword } from "../common/utils/password";
 import { AppError } from "../common/error/errors";
+import { Users, UserProfile } from "../common/types/users";
+import { User } from '../modules/users/user.model';
 
 export const userService = {
-  getMe: async (userId: string, tenantId: string) => {
-    const user = userRepository.findById(userId, tenantId);
+  getMe: async (userId: string, tenantId: string): Promise<UserProfile> => {
+    const user = await userRepository.findById(userId, tenantId);
     if (!user) {
       throw new AppError("User Not Found!", 400);
     }
@@ -18,14 +20,14 @@ export const userService = {
     return user;
   },
 
-  getUsers: async (tenantId: string) => {
-    return userRepository.findByTenant(tenantId);
+  getUsers: async (tenantId: string): Promise<Users> => {
+    return await userRepository.findByTenant(tenantId);
   },
 
-  createUser: async (data: CreateUserInput, tenantId: string) => {
+  createUser: async (data: CreateUserInput, tenantId: string): Promise<User> => {
     const hashedPassword = await hashPassword(data.password);
 
-    return userRepository.createUser({
+    return await userRepository.createUser({
       ...data,
       password: hashedPassword,
       tenantId: new Types.ObjectId(tenantId),

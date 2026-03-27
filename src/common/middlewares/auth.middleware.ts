@@ -19,7 +19,7 @@ export const generateToken = ({
   orgDomain,
 }: TokenPayload) => {
   return jwt.sign({ userId, tenantId, role, orgDomain }, JWT_SCERET, {
-    expiresIn: "1000",
+    expiresIn: "1d",
   });
 };
 
@@ -43,6 +43,7 @@ export const authMiddleware = async (
     };
 
     let user = await User.findOne({ _id: decoded.userId, isActive: true });
+
     if (!user) {
       throw new AppError("Invalid Credentials!", 401);
     }

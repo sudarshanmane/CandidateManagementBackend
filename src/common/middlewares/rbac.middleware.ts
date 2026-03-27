@@ -9,12 +9,14 @@ export const authorize = (...allowedRoles: UserRole[]) => {
       throw new AppError("Unauthorized", 401);
     }
 
+
     if (!allowedRoles.includes(req.user.role as UserRole)) {
       throw new AppError(
         "You don't have permissions to access this module!",
         403,
       );
     }
+
 
     next();
   };

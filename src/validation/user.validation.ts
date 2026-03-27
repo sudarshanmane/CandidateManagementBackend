@@ -10,13 +10,14 @@ export const createUserSchema = (req: AuthRequest) =>
       .email({ message: "Invalid email address!" })
       .refine(
         (email) => {
+          console.log(req.user?.orgDomain)
           const orgDomain = req.user?.orgDomain;
 
           if (!orgDomain) {
             return false;
           }
 
-          return email.toLowerCase().endsWith(`@${orgDomain.toLowerCase()}`);
+          return email.toLowerCase().endsWith(`${orgDomain.toLowerCase()}`);
         },
         {
           message: `Email must belong to organizaion!`,
