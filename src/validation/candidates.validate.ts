@@ -1,0 +1,43 @@
+import { z } from "zod";
+
+const SCREENING_STATUS = [
+    "applied", "screening_scheduled", "screening_completed",
+    "awaiting_l1", "l1_scheduled", "l1_completed",
+    "awaiting_l2", "l2_scheduled", "l2_completed",
+    "awaiting_hr", "hr_scheduled", "hr_completed",
+    "awaiting_managerial", "managerial_scheduled", "managerial_completed",
+    "offer_extended", "offer_accepted", "offer_rejected",
+    "rejected", "withdrawn"
+] as const;
+
+export const createCandidateSchema = z.object({
+    body: z.object({
+        firstName: z.string().min(1, "First name is required").trim(),
+        lastName: z.string().min(1, "Last name is required").trim(),
+        email: z.string().email("Invalid email address").toLowerCase().trim(),
+        phone: z.string().optional(),
+        location: z.string().optional(),
+
+        currentTitle: z.string().optional(),
+        currentCompany: z.string().optional(),
+        resumeUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+
+        jobId: z.string().min(24, "Invalid Job ID format"), // Validates it looks like a Mongo ObjectId
+        source: z.string().optional(),
+    }),
+});
+
+export const updateStatusSchema = z.object({
+    body: z.object({
+        status: z.enum(SCREENING_STATUS, {
+            errorMap: () => ({ message: "Invalid candidate pipeline status provided" }),
+        }),
+    }),
+});
+
+export const rejectCandidateSchema = z.object({
+    body: z.object({
+        rejectionReason: z.string().min(1, "Please provide a reason for rejection"),
+        rejectedAtStage: z.string().min(1, "Please specify the stage of rejection"),
+    }),
+});

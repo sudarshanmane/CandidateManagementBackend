@@ -2,8 +2,6 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 
 export const SCREENING_STATUS = {
     APPLIED: "applied",
-    SCREENING_SCHEDULED: "screening_scheduled",
-    SCREENING_COMPLETED: "screening_completed",
     AWAITING_L1: "awaiting_l1",
     L1_SCHEDULED: "l1_scheduled",
     L1_COMPLETED: "l1_completed",
@@ -27,6 +25,7 @@ export type CandidateStatusType = typeof SCREENING_STATUS[keyof typeof SCREENING
 
 export interface ICandidate extends Document {
     // 1. Personal Info
+    _id: Types.ObjectId;
     firstName: string;
     lastName: string;
     email: string;
@@ -142,6 +141,7 @@ const CandidateSchema = new Schema<ICandidate>(
     },
     { timestamps: true }
 );
+
 CandidateSchema.index({ email: 1, jobId: 1, tenantId: 1 }, { unique: true });
 
 // NEW: Speeds up loading the Kanban board columns (e.g., "Get me all APPLIED candidates for Star Tech")

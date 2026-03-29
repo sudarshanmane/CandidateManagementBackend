@@ -33,7 +33,7 @@ class UserRepository extends BaseRepository<IUser> {
   }
 
   async createUser(data: Partial<IUser>) {
-    return User.create(data);
+    return await User.create(data);
   }
 }
 
