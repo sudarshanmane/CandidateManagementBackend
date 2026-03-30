@@ -15,7 +15,9 @@ export const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
 
 export const getUsers = asyncHandler(
   async (req: AuthRequest, res: Response) => {
-    const data = await userService.getUsers(req.user!.tenantId);
+
+    let query = req.query as Record<string, unknown> | undefined;
+    const data = await userService.getUsers(req.user!.tenantId, query);
 
     sendResponse(res, {
       message: "Users fetched successfully",

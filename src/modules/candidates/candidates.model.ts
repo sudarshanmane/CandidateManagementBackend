@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
+import "../users/user.model";
 
 export const SCREENING_STATUS = {
     APPLIED: "applied",
@@ -84,6 +85,7 @@ export interface ICandidate extends Document {
 
 const CandidateSchema = new Schema<ICandidate>(
     {
+        _id: { type: Schema.Types.ObjectId, auto: true },
         firstName: { type: String, required: true, trim: true },
         lastName: { type: String, required: true, trim: true },
         email: { type: String, required: true, lowercase: true, trim: true },

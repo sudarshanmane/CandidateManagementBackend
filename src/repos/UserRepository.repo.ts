@@ -14,9 +14,11 @@ class UserRepository extends BaseRepository<IUser> {
     }).lean<IUser>();
   }
 
-  async findByTenant(tenantId: string) {
+  async findByTenant(tenantId: string, query?: any = {}): Promise<Users> {
     return User.find({
       tenantId: new Types.ObjectId(tenantId),
+      isActive: true,
+      ...query
     })
       .select("name email role isActive createdAt")
       .lean<Users>();

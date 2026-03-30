@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_middleware_1 = require("../../common/middlewares/auth.middleware");
+const candidates_validate_1 = require("../../validation/candidates.validate");
+const validate_middleware_1 = require("../../common/middlewares/validate.middleware");
+const candidates_cotrollers_1 = require("../../controllers/candidate/candidates.cotrollers");
+const candidateRouter = (0, express_1.Router)();
+candidateRouter.use(auth_middleware_1.authMiddleware);
+candidateRouter.post("/", (0, validate_middleware_1.validate)(candidates_validate_1.createCandidateSchema), candidates_cotrollers_1.createCandidateController);
+candidateRouter.get("/", candidates_cotrollers_1.getCandidatesController);
+candidateRouter.get("/:candidateId", candidates_cotrollers_1.getCandidateByIdController);
+candidateRouter.patch("/:candidateId/status", (0, validate_middleware_1.validate)(candidates_validate_1.updateStatusSchema), candidates_cotrollers_1.updateCondidateStatusController);
+candidateRouter.patch("/:candidateId/reject", (0, validate_middleware_1.validate)(candidates_validate_1.rejectCandidateSchema), candidates_cotrollers_1.rejectCandidateController);
+candidateRouter.post("/:candidateId/interviews", (0, validate_middleware_1.validate)(candidates_validate_1.scheduleInterviewSchema), candidates_cotrollers_1.addInterviewRoundController);
+candidateRouter.patch("/:candidateId/interviews/:interviewId/feedback", (0, validate_middleware_1.validate)(candidates_validate_1.submitFeedbackSchema), candidates_cotrollers_1.submitInterviewFeedback);
+candidateRouter.post("/:candidateId/notes", (0, validate_middleware_1.validate)(candidates_validate_1.addNoteSchema), candidates_cotrollers_1.addNoteController);
+exports.default = candidateRouter;

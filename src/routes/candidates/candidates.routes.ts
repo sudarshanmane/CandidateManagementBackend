@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { authMiddleware } from "../../common/middlewares/auth.middleware";
-import { createCandidateSchema, rejectCandidateSchema, updateStatusSchema, } from "../../validation/candidates.validate";
+import { addNoteSchema, createCandidateSchema, rejectCandidateSchema, scheduleInterviewSchema, submitFeedbackSchema, updateStatusSchema, } from "../../validation/candidates.validate";
 import { validate } from "../../common/middlewares/validate.middleware";
-import { createCandidateController, getCandidateByIdController, getCandidatesController, rejectCandidateController, updateCondidateStatusController } from "../../controllers/candidate/candidates.cotrollers";
+import { addInterviewRoundController, addNoteController, createCandidateController, getCandidateByIdController, getCandidatesController, rejectCandidateController, submitInterviewFeedback, updateCondidateStatusController } from "../../controllers/candidate/candidates.cotrollers";
 
 
 const candidateRouter = Router();
@@ -25,7 +25,6 @@ candidateRouter.get(
     getCandidateByIdController
 );
 
-
 candidateRouter.patch(
     "/:candidateId/status",
     validate(updateStatusSchema),
@@ -37,5 +36,25 @@ candidateRouter.patch(
     validate(rejectCandidateSchema),
     rejectCandidateController
 );
+
+candidateRouter.post(
+    "/:candidateId/interviews",
+    validate(scheduleInterviewSchema),
+    addInterviewRoundController
+);
+
+candidateRouter.patch(
+    "/:candidateId/interviews/:interviewId/feedback",
+    validate(submitFeedbackSchema),
+    submitInterviewFeedback
+);
+
+candidateRouter.post(
+    "/:candidateId/notes",
+    validate(addNoteSchema),
+    addNoteController
+);
+
+
 
 export default candidateRouter;

@@ -44,8 +44,6 @@ export const addInterviewRoundService = async (candidateId: string, tenantId: st
         status: "SCHEDULED",
     };
 
-
-
     const candidate = await candidateRepository.addInterviewRound(candidateId, tenantId, interviewData);
     if (!candidate) throw new AppError("Candidate Not Found!", 404);
 

@@ -16,16 +16,21 @@ class UserRepository extends base_repository_1.BaseRepository {
     async findByTenant(tenantId) {
         return user_model_1.User.find({
             tenantId: new mongoose_1.Types.ObjectId(tenantId),
-        }).lean();
+        })
+            .select("name email role isActive createdAt")
+            .lean();
     }
     async findById(userId, tenantId) {
         return user_model_1.User.findOne({
             _id: new mongoose_1.Types.ObjectId(userId),
             tenantId: new mongoose_1.Types.ObjectId(tenantId),
-        }).lean();
+        })
+            .select("name email role tenantId isActive createdAt updatedAt")
+            .populate([{ path: "tenantId", select: "name domain industry" }])
+            .lean();
     }
     async createUser(data) {
-        return user_model_1.User.create(data);
+        return await user_model_1.User.create(data);
     }
 }
 exports.userRepository = new UserRepository();

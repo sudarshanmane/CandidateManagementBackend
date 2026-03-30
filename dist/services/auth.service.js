@@ -32,12 +32,14 @@ exports.AuthService = {
         if (!isMatch) {
             throw new errors_1.AppError("Invalid credentials!", 400);
         }
-        let token = (0, auth_middleware_1.generateToken)({
+        let orgDomain = user.email.split("@")[1];
+        const payload = {
             userId: user?._id.toString(),
             tenantId: user.tenantId.toString(),
             role: user.role,
-            orgDomain: user.email.split("@")[1],
-        });
-        return { token };
+            orgDomain: `@${orgDomain}`,
+        };
+        let token = (0, auth_middleware_1.generateToken)(payload);
+        return { token, user: payload };
     },
 };

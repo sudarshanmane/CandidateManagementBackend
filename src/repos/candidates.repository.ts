@@ -18,7 +18,9 @@ class CandidateRepository extends BaseRepository<ICandidate> {
     }
 
     async getCandidateById(id: string, tenantId: string): Promise<ICandidate | null> {
-        return await CandidateModel.findOne({ _id: id, tenantId }).lean<ICandidate | null>();
+        return await CandidateModel.findOne({ _id: id, tenantId })
+            .populate("interviews.interviewerId", "name email")
+            .populate("notes.authorId", "name").lean<ICandidate | null>();
     }
 
 
@@ -34,14 +36,21 @@ class CandidateRepository extends BaseRepository<ICandidate> {
     }
 
     async addInterviewRound(candidateId: string, tenantId: string, interviewRoundData: any): Promise<ICandidate | null> {
-        return await CandidateModel.findOneAndUpdate(
+        let candidate = await CandidateModel.findOneAndUpdate(
             {
                 _id: new Types.ObjectId(candidateId),
                 tenantId: new Types.ObjectId(tenantId),
             },
-            { $push: { interviewRounds: interviewRoundData } },
+            { $push: { interviews: interviewRoundData } },
             { new: true, runValidators: true }
-        ).lean();
+        )
+            .populate("interviews.interviewerId", "name email")
+            .lean();
+
+        console.log(candidate)
+
+        return candidate;
+
     }
 
     async addNote(candidateId: string, tenantId: string, noteData: any) {

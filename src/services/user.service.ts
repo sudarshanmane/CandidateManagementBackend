@@ -20,8 +20,8 @@ export const userService = {
     return user;
   },
 
-  getUsers: async (tenantId: string): Promise<Users> => {
-    return await userRepository.findByTenant(tenantId);
+  getUsers: async (tenantId: string, query?: any = {}): Promise<Users> => {
+    return await userRepository.findByTenant(tenantId, query);
   },
 
   createUser: async (data: CreateUserInput, tenantId: string): Promise<User> => {

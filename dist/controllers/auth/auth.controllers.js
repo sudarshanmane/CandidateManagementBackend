@@ -6,10 +6,10 @@ const response_1 = require("../../common/utils/response");
 const asyncHandler_1 = require("../../common/utils/asyncHandler");
 exports.login = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const { email, password } = req.body;
-    const token = await auth_service_1.AuthService.loginUser(email, password);
+    const data = await auth_service_1.AuthService.loginUser(email, password);
     (0, response_1.sendResponse)(res, {
         statusCode: 200,
         message: "success",
-        data: token,
+        data: data,
     });
 });

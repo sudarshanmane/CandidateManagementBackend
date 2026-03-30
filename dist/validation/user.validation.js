@@ -9,15 +9,14 @@ const createUserSchema = (req) => zod_1.z.object({
         .string()
         .email({ message: "Invalid email address!" })
         .refine((email) => {
+        console.log(req.user?.orgDomain);
         const orgDomain = req.user?.orgDomain;
         if (!orgDomain) {
             return false;
         }
-        return email.toLowerCase().endsWith(`@${orgDomain.toLowerCase()}`);
+        return email.toLowerCase().endsWith(`${orgDomain.toLowerCase()}`);
     }, {
-        message: req.user?.orgDomain
-            ? `Email must belong to @${req.user.orgDomain}`
-            : "Unable to validate organization domain. Please login again.",
+        message: `Email must belong to organizaion!`,
     }),
     password: zod_1.z.string().min(6),
     role: zod_1.z.nativeEnum(user_model_1.UserRole),

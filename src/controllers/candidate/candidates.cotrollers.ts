@@ -44,9 +44,12 @@ export const getCandidatesController = asyncHandler(async (req: AuthRequest, res
 })
 
 export const getCandidateByIdController = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const id = req.params?.id as string;
+    const id = req.params?.candidateId as string;
+
+    if (!id) throw new AppError("Candidate ID is required", 400);
 
     const tenantId = req.user?.tenantId as string;
+
     const candidate = await getCandidateByIdService(id, tenantId)
     res.status(200).json({ success: true, data: candidate });
 })
@@ -54,14 +57,13 @@ export const getCandidateByIdController = asyncHandler(async (req: AuthRequest, 
 export const updateCondidateStatusController = asyncHandler(async (req: AuthRequest, res: Response) => {
 
     let tenantId = req.user?.tenantId as string;
-    let id = req.params?.id as string;
+    let id = req.params?.candidateId as string;
     let status = req.body.status as string;
 
     const candidate = await updateCondidateStatusService
         (id, tenantId, status);
 
     if (!candidate) throw new AppError("Candidate Not Found!", 404);
-
 
     sendResponse(res, {
         statusCode: 200,
@@ -70,15 +72,14 @@ export const updateCondidateStatusController = asyncHandler(async (req: AuthRequ
     });
 })
 
-
 export const rejectCandidateController = asyncHandler(async (req: AuthRequest, res: Response) => {
 
-    let id = req.params.id as string;
+    let id = req.params.candidateId as string;
     let tenantId = req.user?.tenantId as string;
 
-    let reason = req.body.reason as string;
-    let stage = req.body.stage as string;
-
+    let reason = req.body.rejectionReason as string;
+    let stage = req.body.rejectedAtStage as string;
+    
     let candidate = await rejectCandidate(id, tenantId, reason, stage)
     if (!candidate) throw new AppError("Candidate Not Found!", 404);
 
@@ -89,10 +90,9 @@ export const rejectCandidateController = asyncHandler(async (req: AuthRequest, r
     });
 })
 
-
 export const addInterviewRoundController = asyncHandler(async (req: AuthRequest, res: Response) => {
 
-    let id = req.params.id as string;
+    let id = req.params.candidateId as string;
     let tenantId = req.user?.tenantId as string;
     let interviewRoundData = req.body as any;
 
@@ -107,7 +107,7 @@ export const addInterviewRoundController = asyncHandler(async (req: AuthRequest,
 
 export const submitInterviewFeedback = asyncHandler(async (req: AuthRequest, res: Response) => {
 
-    let candidateId = req.params.id as string;
+    let candidateId = req.params.candidateId as string;
     let tenantId = req.user?.tenantId as string;
     let interviewId = req.params.interviewId as string;
     let feedbackData = req.body as any;
@@ -116,16 +116,15 @@ export const submitInterviewFeedback = asyncHandler(async (req: AuthRequest, res
     if (!candidate) throw new AppError("Candidate Not Found!", 404);
 
     sendResponse(res, { statusCode: 200, message: "Interview Feedback Submitted Successfully!", data: candidate });
-
 })
 
 export const addNoteController = asyncHandler(async (req: AuthRequest, res: Response) => {
 
-    let id = req.params.id as string;
+    let id = req.params.candidateId as string;
     let tenantId = req.user?.tenantId as string;
     let noteData = req.body as any;
 
     let candidate = await addNoteService(id, tenantId, noteData.text, noteData.authorId);
-    if (!candidate) throw new AppError("Candidate Not Found!", 404);
+
     sendResponse(res, { statusCode: 200, message: "Note Added Successfully!", data: candidate });
 })

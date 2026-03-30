@@ -35,6 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = exports.UserRole = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+require("../org/org.model");
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "ADMIN";

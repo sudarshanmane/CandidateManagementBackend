@@ -26,6 +26,9 @@ exports.createUser = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     });
 });
 exports.updateUser = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    // this route is not for updating password and isActive status of user, so removing those fields from body if they are present in request    delete req.body['isActive']
+    delete req.body['password'];
+    delete req.body['isActive'];
     const data = await user_service_1.userService.updateUser(req.user.userId, req.user.tenantId, req.body);
     (0, response_1.sendResponse)(res, {
         message: "User Updated successfully",
